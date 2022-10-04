@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "212760180785",
+    "project_id": "minutemathfirebase",
+    "storage_bucket": "minutemathfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212760180785:android:46edb539d5240a52c4bd10",
+        "android_client_info": {
+          "package_name": "com.flutterflow.fftrivia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212760180785-99a8apb9uhao1m8lgfu3p1vt3lfc9epe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDziClIBES4nuwRp_7HXVWslnF6jug_y2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212760180785-99a8apb9uhao1m8lgfu3p1vt3lfc9epe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "212760180785-fojiqejfimr60s08opcersam5qjda0a7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.fftrivia"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

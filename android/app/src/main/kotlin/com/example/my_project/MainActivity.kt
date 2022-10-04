@@ -1,4 +1,4 @@
-package com.example.minute_math
+package com.flutterflow.fftrivia
 
 import io.flutter.embedding.android.FlutterActivity
 
