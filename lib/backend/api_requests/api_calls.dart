@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import '../../flutter_flow/flutter_flow_util.dart';
 
 import 'api_manager.dart';
@@ -21,6 +24,9 @@ class GetCategoriesCall {
         'offset': offset,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -38,6 +44,9 @@ class CategoryCall {
         'id': id,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -57,6 +66,9 @@ class QuestionCall {
         'value': value,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -74,6 +86,9 @@ class AllQuestionsCall {
         'category': category,
       },
       returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
   }
 }
@@ -92,4 +107,22 @@ class ApiPagingParams {
   @override
   String toString() =>
       'PagingParams(nextPageNumber: $nextPageNumber, numItems: $numItems, lastResponse: $lastResponse,)';
+}
+
+String _serializeList(List? list) {
+  list ??= <String>[];
+  try {
+    return json.encode(list);
+  } catch (_) {
+    return '[]';
+  }
+}
+
+String _serializeJson(dynamic jsonVar) {
+  jsonVar ??= {};
+  try {
+    return json.encode(jsonVar);
+  } catch (_) {
+    return '{}';
+  }
 }

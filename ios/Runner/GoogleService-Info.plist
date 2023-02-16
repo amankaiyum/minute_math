@@ -30,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:212760180785:ios:e98280715d28ed9bc4bd10</string>
+	<key>DATABASE_URL</key>
+	<string>https://minutemathfirebase-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

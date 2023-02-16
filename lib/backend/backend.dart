@@ -1,14 +1,14 @@
 import 'package:built_value/serializer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../auth/auth_util.dart';
 
 import '../flutter_flow/flutter_flow_util.dart';
 
 import 'schema/users_record.dart';
-import 'schema/games_record.dart';
-import 'schema/game_scores_record.dart';
-import 'schema/daily_question_set_record.dart';
-import 'schema/user_scores_record.dart';
+import 'schema/rooms_record.dart';
+import 'schema/players_record.dart';
+import 'schema/daily_set_record.dart';
 import 'schema/serializers.dart';
 
 export 'dart:async' show StreamSubscription;
@@ -17,12 +17,21 @@ export 'schema/index.dart';
 export 'schema/serializers.dart';
 
 export 'schema/users_record.dart';
-export 'schema/games_record.dart';
-export 'schema/game_scores_record.dart';
-export 'schema/daily_question_set_record.dart';
-export 'schema/user_scores_record.dart';
+export 'schema/rooms_record.dart';
+export 'schema/players_record.dart';
+export 'schema/daily_set_record.dart';
 
 /// Functions to query UsersRecords (as a Stream and as a Future).
+Future<int> queryUsersRecordCount({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      UsersRecord.collection,
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
 Stream<List<UsersRecord>> queryUsersRecord({
   Query Function(Query)? queryBuilder,
   int limit = -1,
@@ -64,174 +73,181 @@ Future<FFFirestorePage<UsersRecord>> queryUsersRecordPage({
       isStream: isStream,
     );
 
-/// Functions to query GamesRecords (as a Stream and as a Future).
-Stream<List<GamesRecord>> queryGamesRecord({
+/// Functions to query RoomsRecords (as a Stream and as a Future).
+Future<int> queryRoomsRecordCount({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      RoomsRecord.collection,
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<RoomsRecord>> queryRoomsRecord({
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
 }) =>
     queryCollection(
-      GamesRecord.collection,
-      GamesRecord.serializer,
+      RoomsRecord.collection,
+      RoomsRecord.serializer,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
     );
 
-Future<List<GamesRecord>> queryGamesRecordOnce({
+Future<List<RoomsRecord>> queryRoomsRecordOnce({
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
 }) =>
     queryCollectionOnce(
-      GamesRecord.collection,
-      GamesRecord.serializer,
+      RoomsRecord.collection,
+      RoomsRecord.serializer,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
     );
 
-Future<FFFirestorePage<GamesRecord>> queryGamesRecordPage({
+Future<FFFirestorePage<RoomsRecord>> queryRoomsRecordPage({
   Query Function(Query)? queryBuilder,
   DocumentSnapshot? nextPageMarker,
   required int pageSize,
   required bool isStream,
 }) =>
     queryCollectionPage(
-      GamesRecord.collection,
-      GamesRecord.serializer,
+      RoomsRecord.collection,
+      RoomsRecord.serializer,
       queryBuilder: queryBuilder,
       nextPageMarker: nextPageMarker,
       pageSize: pageSize,
       isStream: isStream,
     );
 
-/// Functions to query GameScoresRecords (as a Stream and as a Future).
-Stream<List<GameScoresRecord>> queryGameScoresRecord({
+/// Functions to query PlayersRecords (as a Stream and as a Future).
+Future<int> queryPlayersRecordCount({
+  DocumentReference? parent,
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      PlayersRecord.collection(parent),
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<PlayersRecord>> queryPlayersRecord({
+  DocumentReference? parent,
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
 }) =>
     queryCollection(
-      GameScoresRecord.collection,
-      GameScoresRecord.serializer,
+      PlayersRecord.collection(parent),
+      PlayersRecord.serializer,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
     );
 
-Future<List<GameScoresRecord>> queryGameScoresRecordOnce({
+Future<List<PlayersRecord>> queryPlayersRecordOnce({
+  DocumentReference? parent,
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
 }) =>
     queryCollectionOnce(
-      GameScoresRecord.collection,
-      GameScoresRecord.serializer,
+      PlayersRecord.collection(parent),
+      PlayersRecord.serializer,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
     );
 
-Future<FFFirestorePage<GameScoresRecord>> queryGameScoresRecordPage({
+Future<FFFirestorePage<PlayersRecord>> queryPlayersRecordPage({
+  DocumentReference? parent,
   Query Function(Query)? queryBuilder,
   DocumentSnapshot? nextPageMarker,
   required int pageSize,
   required bool isStream,
 }) =>
     queryCollectionPage(
-      GameScoresRecord.collection,
-      GameScoresRecord.serializer,
+      PlayersRecord.collection(parent),
+      PlayersRecord.serializer,
       queryBuilder: queryBuilder,
       nextPageMarker: nextPageMarker,
       pageSize: pageSize,
       isStream: isStream,
     );
 
-/// Functions to query DailyQuestionSetRecords (as a Stream and as a Future).
-Stream<List<DailyQuestionSetRecord>> queryDailyQuestionSetRecord({
+/// Functions to query DailySetRecords (as a Stream and as a Future).
+Future<int> queryDailySetRecordCount({
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) =>
+    queryCollectionCount(
+      DailySetRecord.collection,
+      queryBuilder: queryBuilder,
+      limit: limit,
+    );
+
+Stream<List<DailySetRecord>> queryDailySetRecord({
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
 }) =>
     queryCollection(
-      DailyQuestionSetRecord.collection,
-      DailyQuestionSetRecord.serializer,
+      DailySetRecord.collection,
+      DailySetRecord.serializer,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
     );
 
-Future<List<DailyQuestionSetRecord>> queryDailyQuestionSetRecordOnce({
+Future<List<DailySetRecord>> queryDailySetRecordOnce({
   Query Function(Query)? queryBuilder,
   int limit = -1,
   bool singleRecord = false,
 }) =>
     queryCollectionOnce(
-      DailyQuestionSetRecord.collection,
-      DailyQuestionSetRecord.serializer,
+      DailySetRecord.collection,
+      DailySetRecord.serializer,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,
     );
 
-Future<FFFirestorePage<DailyQuestionSetRecord>>
-    queryDailyQuestionSetRecordPage({
-  Query Function(Query)? queryBuilder,
-  DocumentSnapshot? nextPageMarker,
-  required int pageSize,
-  required bool isStream,
-}) =>
-        queryCollectionPage(
-          DailyQuestionSetRecord.collection,
-          DailyQuestionSetRecord.serializer,
-          queryBuilder: queryBuilder,
-          nextPageMarker: nextPageMarker,
-          pageSize: pageSize,
-          isStream: isStream,
-        );
-
-/// Functions to query UserScoresRecords (as a Stream and as a Future).
-Stream<List<UserScoresRecord>> queryUserScoresRecord({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollection(
-      UserScoresRecord.collection,
-      UserScoresRecord.serializer,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<List<UserScoresRecord>> queryUserScoresRecordOnce({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollectionOnce(
-      UserScoresRecord.collection,
-      UserScoresRecord.serializer,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<FFFirestorePage<UserScoresRecord>> queryUserScoresRecordPage({
+Future<FFFirestorePage<DailySetRecord>> queryDailySetRecordPage({
   Query Function(Query)? queryBuilder,
   DocumentSnapshot? nextPageMarker,
   required int pageSize,
   required bool isStream,
 }) =>
     queryCollectionPage(
-      UserScoresRecord.collection,
-      UserScoresRecord.serializer,
+      DailySetRecord.collection,
+      DailySetRecord.serializer,
       queryBuilder: queryBuilder,
       nextPageMarker: nextPageMarker,
       pageSize: pageSize,
       isStream: isStream,
     );
+
+Future<int> queryCollectionCount(
+  Query collection, {
+  Query Function(Query)? queryBuilder,
+  int limit = -1,
+}) {
+  final builder = queryBuilder ?? (q) => q;
+  var query = builder(collection);
+  if (limit > 0) {
+    query = query.limit(limit);
+  }
+
+  return query.count().get().catchError((err) {
+    print('Error querying $collection: $err');
+  }).then((value) => value.count);
+}
 
 Stream<List<T>> queryCollection<T>(Query collection, Serializer<T> serializer,
     {Query Function(Query)? queryBuilder,
@@ -343,6 +359,7 @@ Future maybeCreateUser(User user) async {
   final userRecord = UsersRecord.collection.doc(user.uid);
   final userExists = await userRecord.get().then((u) => u.exists);
   if (userExists) {
+    currentUserDocument = await UsersRecord.getDocumentOnce(userRecord);
     return;
   }
 
@@ -356,4 +373,6 @@ Future maybeCreateUser(User user) async {
   );
 
   await userRecord.set(userData);
+  currentUserDocument =
+      serializers.deserializeWith(UsersRecord.serializer, userData);
 }

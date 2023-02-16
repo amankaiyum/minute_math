@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "212760180785",
+    "firebase_url": "https://minutemathfirebase-default-rtdb.firebaseio.com",
     "project_id": "minutemathfirebase",
     "storage_bucket": "minutemathfirebase.appspot.com"
   },

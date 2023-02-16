@@ -1,3 +1,18 @@
 {
-  "indexes": []
+  "indexes": [
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "daily_score",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "avg_daily_score",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ]
 }

@@ -67,6 +67,99 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
         ..add('daily_score')
         ..add(serializers.serialize(value, specifiedType: const FullType(int)));
     }
+    value = object.bestScore;
+    if (value != null) {
+      result
+        ..add('best_score')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.avgDailyScore;
+    if (value != null) {
+      result
+        ..add('avg_daily_score')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
+    }
+    value = object.daysPlayed;
+    if (value != null) {
+      result
+        ..add('days_played')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.ds15sScore;
+    if (value != null) {
+      result
+        ..add('ds_15s_score')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.ds15sAvg;
+    if (value != null) {
+      result
+        ..add('ds_15s_avg')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
+    }
+    value = object.ds15sBest;
+    if (value != null) {
+      result
+        ..add('ds_15s_best')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.ds15sDp;
+    if (value != null) {
+      result
+        ..add('ds_15s_dp')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.ds30sScore;
+    if (value != null) {
+      result
+        ..add('ds_30s_score')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.ds30sAvg;
+    if (value != null) {
+      result
+        ..add('ds_30s_avg')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(double)));
+    }
+    value = object.ds30sBest;
+    if (value != null) {
+      result
+        ..add('ds_30s_best')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.ds30sDp;
+    if (value != null) {
+      result
+        ..add('ds_30s_dp')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.tTEasy;
+    if (value != null) {
+      result
+        ..add('TTEasy')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.tTMedium;
+    if (value != null) {
+      result
+        ..add('TTMedium')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.tTHard;
+    if (value != null) {
+      result
+        ..add('TTHard')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
+    value = object.tTHell;
+    if (value != null) {
+      result
+        ..add('TTHell')
+        ..add(serializers.serialize(value, specifiedType: const FullType(int)));
+    }
     value = object.ffRef;
     if (value != null) {
       result
@@ -117,6 +210,66 @@ class _$UsersRecordSerializer implements StructuredSerializer<UsersRecord> {
           result.dailyScore = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int?;
           break;
+        case 'best_score':
+          result.bestScore = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'avg_daily_score':
+          result.avgDailyScore = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double?;
+          break;
+        case 'days_played':
+          result.daysPlayed = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'ds_15s_score':
+          result.ds15sScore = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'ds_15s_avg':
+          result.ds15sAvg = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double?;
+          break;
+        case 'ds_15s_best':
+          result.ds15sBest = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'ds_15s_dp':
+          result.ds15sDp = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'ds_30s_score':
+          result.ds30sScore = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'ds_30s_avg':
+          result.ds30sAvg = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double?;
+          break;
+        case 'ds_30s_best':
+          result.ds30sBest = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'ds_30s_dp':
+          result.ds30sDp = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'TTEasy':
+          result.tTEasy = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'TTMedium':
+          result.tTMedium = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'TTHard':
+          result.tTHard = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
+        case 'TTHell':
+          result.tTHell = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int?;
+          break;
         case 'Document__Reference__Field':
           result.ffRef = serializers.deserialize(value,
               specifiedType: const FullType(DocumentReference, const [
@@ -146,6 +299,36 @@ class _$UsersRecord extends UsersRecord {
   @override
   final int? dailyScore;
   @override
+  final int? bestScore;
+  @override
+  final double? avgDailyScore;
+  @override
+  final int? daysPlayed;
+  @override
+  final int? ds15sScore;
+  @override
+  final double? ds15sAvg;
+  @override
+  final int? ds15sBest;
+  @override
+  final int? ds15sDp;
+  @override
+  final int? ds30sScore;
+  @override
+  final double? ds30sAvg;
+  @override
+  final int? ds30sBest;
+  @override
+  final int? ds30sDp;
+  @override
+  final int? tTEasy;
+  @override
+  final int? tTMedium;
+  @override
+  final int? tTHard;
+  @override
+  final int? tTHell;
+  @override
   final DocumentReference<Object?>? ffRef;
 
   factory _$UsersRecord([void Function(UsersRecordBuilder)? updates]) =>
@@ -159,6 +342,21 @@ class _$UsersRecord extends UsersRecord {
       this.createdTime,
       this.phoneNumber,
       this.dailyScore,
+      this.bestScore,
+      this.avgDailyScore,
+      this.daysPlayed,
+      this.ds15sScore,
+      this.ds15sAvg,
+      this.ds15sBest,
+      this.ds15sDp,
+      this.ds30sScore,
+      this.ds30sAvg,
+      this.ds30sBest,
+      this.ds30sDp,
+      this.tTEasy,
+      this.tTMedium,
+      this.tTHard,
+      this.tTHell,
       this.ffRef})
       : super._();
 
@@ -180,6 +378,21 @@ class _$UsersRecord extends UsersRecord {
         createdTime == other.createdTime &&
         phoneNumber == other.phoneNumber &&
         dailyScore == other.dailyScore &&
+        bestScore == other.bestScore &&
+        avgDailyScore == other.avgDailyScore &&
+        daysPlayed == other.daysPlayed &&
+        ds15sScore == other.ds15sScore &&
+        ds15sAvg == other.ds15sAvg &&
+        ds15sBest == other.ds15sBest &&
+        ds15sDp == other.ds15sDp &&
+        ds30sScore == other.ds30sScore &&
+        ds30sAvg == other.ds30sAvg &&
+        ds30sBest == other.ds30sBest &&
+        ds30sDp == other.ds30sDp &&
+        tTEasy == other.tTEasy &&
+        tTMedium == other.tTMedium &&
+        tTHard == other.tTHard &&
+        tTHell == other.tTHell &&
         ffRef == other.ffRef;
   }
 
@@ -190,12 +403,38 @@ class _$UsersRecord extends UsersRecord {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, email.hashCode), displayName.hashCode),
-                            photoUrl.hashCode),
-                        uid.hashCode),
-                    createdTime.hashCode),
-                phoneNumber.hashCode),
-            dailyScore.hashCode),
+                        $jc(
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc(
+                                            $jc(
+                                                $jc(
+                                                    $jc(
+                                                        $jc(
+                                                            $jc(
+                                                                $jc(
+                                                                    $jc(
+                                                                        $jc(
+                                                                            $jc($jc($jc($jc($jc(0, email.hashCode), displayName.hashCode), photoUrl.hashCode), uid.hashCode),
+                                                                                createdTime.hashCode),
+                                                                            phoneNumber.hashCode),
+                                                                        dailyScore.hashCode),
+                                                                    bestScore.hashCode),
+                                                                avgDailyScore.hashCode),
+                                                            daysPlayed.hashCode),
+                                                        ds15sScore.hashCode),
+                                                    ds15sAvg.hashCode),
+                                                ds15sBest.hashCode),
+                                            ds15sDp.hashCode),
+                                        ds30sScore.hashCode),
+                                    ds30sAvg.hashCode),
+                                ds30sBest.hashCode),
+                            ds30sDp.hashCode),
+                        tTEasy.hashCode),
+                    tTMedium.hashCode),
+                tTHard.hashCode),
+            tTHell.hashCode),
         ffRef.hashCode));
   }
 
@@ -209,6 +448,21 @@ class _$UsersRecord extends UsersRecord {
           ..add('createdTime', createdTime)
           ..add('phoneNumber', phoneNumber)
           ..add('dailyScore', dailyScore)
+          ..add('bestScore', bestScore)
+          ..add('avgDailyScore', avgDailyScore)
+          ..add('daysPlayed', daysPlayed)
+          ..add('ds15sScore', ds15sScore)
+          ..add('ds15sAvg', ds15sAvg)
+          ..add('ds15sBest', ds15sBest)
+          ..add('ds15sDp', ds15sDp)
+          ..add('ds30sScore', ds30sScore)
+          ..add('ds30sAvg', ds30sAvg)
+          ..add('ds30sBest', ds30sBest)
+          ..add('ds30sDp', ds30sDp)
+          ..add('tTEasy', tTEasy)
+          ..add('tTMedium', tTMedium)
+          ..add('tTHard', tTHard)
+          ..add('tTHell', tTHell)
           ..add('ffRef', ffRef))
         .toString();
   }
@@ -245,6 +499,67 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
   int? get dailyScore => _$this._dailyScore;
   set dailyScore(int? dailyScore) => _$this._dailyScore = dailyScore;
 
+  int? _bestScore;
+  int? get bestScore => _$this._bestScore;
+  set bestScore(int? bestScore) => _$this._bestScore = bestScore;
+
+  double? _avgDailyScore;
+  double? get avgDailyScore => _$this._avgDailyScore;
+  set avgDailyScore(double? avgDailyScore) =>
+      _$this._avgDailyScore = avgDailyScore;
+
+  int? _daysPlayed;
+  int? get daysPlayed => _$this._daysPlayed;
+  set daysPlayed(int? daysPlayed) => _$this._daysPlayed = daysPlayed;
+
+  int? _ds15sScore;
+  int? get ds15sScore => _$this._ds15sScore;
+  set ds15sScore(int? ds15sScore) => _$this._ds15sScore = ds15sScore;
+
+  double? _ds15sAvg;
+  double? get ds15sAvg => _$this._ds15sAvg;
+  set ds15sAvg(double? ds15sAvg) => _$this._ds15sAvg = ds15sAvg;
+
+  int? _ds15sBest;
+  int? get ds15sBest => _$this._ds15sBest;
+  set ds15sBest(int? ds15sBest) => _$this._ds15sBest = ds15sBest;
+
+  int? _ds15sDp;
+  int? get ds15sDp => _$this._ds15sDp;
+  set ds15sDp(int? ds15sDp) => _$this._ds15sDp = ds15sDp;
+
+  int? _ds30sScore;
+  int? get ds30sScore => _$this._ds30sScore;
+  set ds30sScore(int? ds30sScore) => _$this._ds30sScore = ds30sScore;
+
+  double? _ds30sAvg;
+  double? get ds30sAvg => _$this._ds30sAvg;
+  set ds30sAvg(double? ds30sAvg) => _$this._ds30sAvg = ds30sAvg;
+
+  int? _ds30sBest;
+  int? get ds30sBest => _$this._ds30sBest;
+  set ds30sBest(int? ds30sBest) => _$this._ds30sBest = ds30sBest;
+
+  int? _ds30sDp;
+  int? get ds30sDp => _$this._ds30sDp;
+  set ds30sDp(int? ds30sDp) => _$this._ds30sDp = ds30sDp;
+
+  int? _tTEasy;
+  int? get tTEasy => _$this._tTEasy;
+  set tTEasy(int? tTEasy) => _$this._tTEasy = tTEasy;
+
+  int? _tTMedium;
+  int? get tTMedium => _$this._tTMedium;
+  set tTMedium(int? tTMedium) => _$this._tTMedium = tTMedium;
+
+  int? _tTHard;
+  int? get tTHard => _$this._tTHard;
+  set tTHard(int? tTHard) => _$this._tTHard = tTHard;
+
+  int? _tTHell;
+  int? get tTHell => _$this._tTHell;
+  set tTHell(int? tTHell) => _$this._tTHell = tTHell;
+
   DocumentReference<Object?>? _ffRef;
   DocumentReference<Object?>? get ffRef => _$this._ffRef;
   set ffRef(DocumentReference<Object?>? ffRef) => _$this._ffRef = ffRef;
@@ -263,6 +578,21 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
       _createdTime = $v.createdTime;
       _phoneNumber = $v.phoneNumber;
       _dailyScore = $v.dailyScore;
+      _bestScore = $v.bestScore;
+      _avgDailyScore = $v.avgDailyScore;
+      _daysPlayed = $v.daysPlayed;
+      _ds15sScore = $v.ds15sScore;
+      _ds15sAvg = $v.ds15sAvg;
+      _ds15sBest = $v.ds15sBest;
+      _ds15sDp = $v.ds15sDp;
+      _ds30sScore = $v.ds30sScore;
+      _ds30sAvg = $v.ds30sAvg;
+      _ds30sBest = $v.ds30sBest;
+      _ds30sDp = $v.ds30sDp;
+      _tTEasy = $v.tTEasy;
+      _tTMedium = $v.tTMedium;
+      _tTHard = $v.tTHard;
+      _tTHell = $v.tTHell;
       _ffRef = $v.ffRef;
       _$v = null;
     }
@@ -293,6 +623,21 @@ class UsersRecordBuilder implements Builder<UsersRecord, UsersRecordBuilder> {
             createdTime: createdTime,
             phoneNumber: phoneNumber,
             dailyScore: dailyScore,
+            bestScore: bestScore,
+            avgDailyScore: avgDailyScore,
+            daysPlayed: daysPlayed,
+            ds15sScore: ds15sScore,
+            ds15sAvg: ds15sAvg,
+            ds15sBest: ds15sBest,
+            ds15sDp: ds15sDp,
+            ds30sScore: ds30sScore,
+            ds30sAvg: ds30sAvg,
+            ds30sBest: ds30sBest,
+            ds30sDp: ds30sDp,
+            tTEasy: tTEasy,
+            tTMedium: tTMedium,
+            tTHard: tTHard,
+            tTHell: tTHell,
             ffRef: ffRef);
     replace(_$result);
     return _$result;

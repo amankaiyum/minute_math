@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'flutter_flow/lat_lng.dart';
 
-class FFAppState {
+class FFAppState extends ChangeNotifier {
   static final FFAppState _instance = FFAppState._internal();
 
   factory FFAppState() {
@@ -14,67 +15,117 @@ class FFAppState {
 
   Future initializePersistedState() async {
     prefs = await SharedPreferences.getInstance();
-    _DaysPlayed = prefs.getInt('ff_DaysPlayed') ?? _DaysPlayed;
-    _AvgDailyScore = prefs.getDouble('ff_AvgDailyScore') ?? _AvgDailyScore;
-    _timeTrialHighestScore = prefs
-            .getStringList('ff_timeTrialHighestScore')
-            ?.map(double.parse)
-            .toList() ??
-        _timeTrialHighestScore;
+  }
+
+  void update(VoidCallback callback) {
+    callback();
+    notifyListeners();
   }
 
   late SharedPreferences prefs;
 
-  String userAnswer = '';
-
-  int currentScore = 0;
-
-  String currentQuestion = '';
-
-  List<String> operation = ['+', '-', '*', '/'];
-
-  int trialScore = 0;
-
-  List<String> TimeTrialLevels = [
-    'Easy',
-    'Medium',
-    'Hard',
-    'Very Hard',
-    'Hell'
-  ];
-
-  int _DaysPlayed = 0;
-  int get DaysPlayed => _DaysPlayed;
-  set DaysPlayed(int _value) {
-    _DaysPlayed = _value;
-    prefs.setInt('ff_DaysPlayed', _value);
+  String _userAnswer = '';
+  String get userAnswer => _userAnswer;
+  set userAnswer(String _value) {
+    _userAnswer = _value;
   }
 
-  double _AvgDailyScore = 0.0;
-  double get AvgDailyScore => _AvgDailyScore;
-  set AvgDailyScore(double _value) {
-    _AvgDailyScore = _value;
-    prefs.setDouble('ff_AvgDailyScore', _value);
+  int _currentScore = 0;
+  int get currentScore => _currentScore;
+  set currentScore(int _value) {
+    _currentScore = _value;
   }
 
-  List<double> _timeTrialHighestScore = [5, 4, 3, 2, 1];
-  List<double> get timeTrialHighestScore => _timeTrialHighestScore;
-  set timeTrialHighestScore(List<double> _value) {
-    _timeTrialHighestScore = _value;
-    prefs.setStringList(
-        'ff_timeTrialHighestScore', _value.map((x) => x.toString()).toList());
+  String _currentQuestion = '';
+  String get currentQuestion => _currentQuestion;
+  set currentQuestion(String _value) {
+    _currentQuestion = _value;
   }
 
-  void addToTimeTrialHighestScore(double _value) {
-    _timeTrialHighestScore.add(_value);
-    prefs.setStringList('ff_timeTrialHighestScore',
-        _timeTrialHighestScore.map((x) => x.toString()).toList());
+  int _trialScore = 0;
+  int get trialScore => _trialScore;
+  set trialScore(int _value) {
+    _trialScore = _value;
   }
 
-  void removeFromTimeTrialHighestScore(double _value) {
-    _timeTrialHighestScore.remove(_value);
-    prefs.setStringList('ff_timeTrialHighestScore',
-        _timeTrialHighestScore.map((x) => x.toString()).toList());
+  int _multiplayerscore = 0;
+  int get multiplayerscore => _multiplayerscore;
+  set multiplayerscore(int _value) {
+    _multiplayerscore = _value;
+  }
+
+  List<String> _multiplayerQuestonList = [];
+  List<String> get multiplayerQuestonList => _multiplayerQuestonList;
+  set multiplayerQuestonList(List<String> _value) {
+    _multiplayerQuestonList = _value;
+  }
+
+  void addToMultiplayerQuestonList(String _value) {
+    _multiplayerQuestonList.add(_value);
+  }
+
+  void removeFromMultiplayerQuestonList(String _value) {
+    _multiplayerQuestonList.remove(_value);
+  }
+
+  void removeAtIndexFromMultiplayerQuestonList(int _index) {
+    _multiplayerQuestonList.removeAt(_index);
+  }
+
+  int _round = 0;
+  int get round => _round;
+  set round(int _value) {
+    _round = _value;
+  }
+
+  bool _editIcon = true;
+  bool get editIcon => _editIcon;
+  set editIcon(bool _value) {
+    _editIcon = _value;
+  }
+
+  int _currQuestion = 0;
+  int get currQuestion => _currQuestion;
+  set currQuestion(int _value) {
+    _currQuestion = _value;
+  }
+
+  bool _dsCompleted = false;
+  bool get dsCompleted => _dsCompleted;
+  set dsCompleted(bool _value) {
+    _dsCompleted = _value;
+  }
+
+  bool _ds30sCompleted = false;
+  bool get ds30sCompleted => _ds30sCompleted;
+  set ds30sCompleted(bool _value) {
+    _ds30sCompleted = _value;
+  }
+
+  bool _ds15sCompleted = false;
+  bool get ds15sCompleted => _ds15sCompleted;
+  set ds15sCompleted(bool _value) {
+    _ds15sCompleted = _value;
+  }
+
+  DateTime? _dsResetTime = DateTime.fromMillisecondsSinceEpoch(1671135960000);
+  DateTime? get dsResetTime => _dsResetTime;
+  set dsResetTime(DateTime? _value) {
+    _dsResetTime = _value;
+  }
+
+  DateTime? _ds15sResetTime =
+      DateTime.fromMillisecondsSinceEpoch(1671135960000);
+  DateTime? get ds15sResetTime => _ds15sResetTime;
+  set ds15sResetTime(DateTime? _value) {
+    _ds15sResetTime = _value;
+  }
+
+  DateTime? _ds30sResetTime =
+      DateTime.fromMillisecondsSinceEpoch(1671135960000);
+  DateTime? get ds30sResetTime => _ds30sResetTime;
+  set ds30sResetTime(DateTime? _value) {
+    _ds30sResetTime = _value;
   }
 }
 

@@ -1,10 +1,13 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'auth/firebase_user_provider.dart';
 import 'auth/auth_util.dart';
 
+import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
@@ -12,11 +15,14 @@ import 'index.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await initFirebase();
 
-  FFAppState(); // Initialize FFAppState
+  final appState = FFAppState(); // Initialize FFAppState
 
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => appState,
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -43,6 +49,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     userStream = minuteMathFirebaseUserStream()
       ..listen((user) => initialUser ?? setState(() => initialUser = user));
+    jwtTokenStream.listen((_) {});
     Future.delayed(
       Duration(seconds: 1),
       () => setState(() => displaySplashImage = false),
@@ -56,8 +63,10 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void setLocale(String language) =>
-      setState(() => _locale = createLocale(language));
+  void setLocale(String language) {
+    setState(() => _locale = createLocale(language));
+  }
+
   void setThemeMode(ThemeMode mode) => setState(() {
         _themeMode = mode;
       });

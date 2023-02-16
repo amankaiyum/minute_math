@@ -6,53 +6,65 @@ import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../flutter_flow/custom_functions.dart' as functions;
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'daily_set_model.dart';
+export 'daily_set_model.dart';
 
 class DailySetWidget extends StatefulWidget {
-  const DailySetWidget({Key? key}) : super(key: key);
+  const DailySetWidget({
+    Key? key,
+    this.timerStart,
+    this.dailyset,
+  }) : super(key: key);
+
+  final int? timerStart;
+  final List<String>? dailyset;
 
   @override
   _DailySetWidgetState createState() => _DailySetWidgetState();
 }
 
 class _DailySetWidgetState extends State<DailySetWidget> {
-  StopWatchTimer? timerController;
-  String? timerValue;
-  int? timerMilliseconds;
-  TextEditingController? userAnswerTextController;
+  late DailySetModel _model;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _unfocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    _model = createModel(context, () => DailySetModel());
+
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      timerController?.onExecute.add(
-        StopWatchExecute.start,
-      );
-
-      setState(() => FFAppState().currentQuestion = valueOrDefault<String>(
-            functions.generateRandomQuestion('Easy'),
-            'Easy',
-          ));
+      _model.timerController.onExecute.add(StopWatchExecute.start);
+      FFAppState().update(() {
+        FFAppState().currentQuestion = functions.getCurrentQuestion(
+            widget.dailyset!.toList(), FFAppState().currQuestion);
+      });
     });
 
-    userAnswerTextController = TextEditingController();
+    _model.userAnswerTextController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
   void dispose() {
-    timerController?.dispose();
-    userAnswerTextController?.dispose();
+    _model.dispose();
+
+    _unfocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Colors.black,
@@ -71,9 +83,17 @@ class _DailySetWidgetState extends State<DailySetWidget> {
           ),
           onPressed: () async {
             Navigator.pop(context);
-            timerController?.onExecute.add(
-              StopWatchExecute.stop,
-            );
+            FFAppState().update(() {
+              FFAppState().currentScore = 0;
+              FFAppState().currentQuestion = '';
+            });
+            FFAppState().update(() {
+              FFAppState().userAnswer = '';
+            });
+            FFAppState().update(() {
+              FFAppState().currQuestion = 0;
+            });
+            _model.timerController.onExecute.add(StopWatchExecute.stop);
           },
         ),
         title: Text(
@@ -86,7 +106,7 @@ class _DailySetWidgetState extends State<DailySetWidget> {
       ),
       body: SafeArea(
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,47 +121,23 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: FlutterFlowTimer(
-                        onInit: () {
-                          timerMilliseconds ??= 60000;
-                          timerValue ??= StopWatchTimer.getDisplayTime(
-                            60000,
-                            hours: false,
-                            minute: true,
-                            second: true,
-                            milliSecond: false,
-                          );
-                          timerController ??= StopWatchTimer(
-                            mode: StopWatchMode.countDown,
-                            presetMillisecond: 60000,
-                            onChange: (value) {
-                              setState(() {
-                                timerMilliseconds = value;
-                                timerValue = StopWatchTimer.getDisplayTime(
-                                  value,
-                                  hours: false,
-                                  minute: true,
-                                  second: true,
-                                  milliSecond: false,
-                                );
-                              });
-                            },
-                          );
-                        },
-                        timerValue: timerValue ??
+                        initialTime: widget.timerStart!,
+                        getDisplayTime: (value) =>
                             StopWatchTimer.getDisplayTime(
-                              0,
-                              hours: false,
-                              minute: true,
-                              second: true,
-                              milliSecond: false,
-                            ),
-                        timer: timerController ?? StopWatchTimer(),
-                        textAlign: TextAlign.end,
-                        style: FlutterFlowTheme.of(context).title1,
+                          value,
+                          hours: false,
+                          milliSecond: false,
+                        ),
+                        timer: _model.timerController,
+                        onChanged: (value, displayTime, shouldUpdate) {
+                          _model.timerMilliseconds = value;
+                          _model.timerValue = displayTime;
+                          if (shouldUpdate) setState(() {});
+                        },
                         onEnded: () async {
                           await Navigator.push(
                             context,
@@ -149,10 +145,14 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                               builder: (context) => EndgameWidget(
                                 score: FFAppState().currentScore,
                                 isDaily: true,
+                                time: 0,
+                                dailySetMode: widget.timerStart,
                               ),
                             ),
                           );
                         },
+                        textAlign: TextAlign.end,
+                        style: FlutterFlowTheme.of(context).title1,
                       ),
                     ),
                     Text(
@@ -198,30 +198,57 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     Expanded(
                       child: TextFormField(
-                        controller: userAnswerTextController,
+                        controller: _model.userAnswerTextController,
+                        onChanged: (_) => EasyDebounce.debounce(
+                          '_model.userAnswerTextController',
+                          Duration(milliseconds: 2000),
+                          () => setState(() {}),
+                        ),
                         onFieldSubmitted: (_) async {
-                          if (functions.questionSolver(
-                                  FFAppState().currentQuestion) ==
-                              userAnswerTextController!.text) {
-                            setState(() => FFAppState().currentScore =
-                                FFAppState().currentScore + 1);
+                          if ((functions.questionSolver(
+                                      FFAppState().currentQuestion) ==
+                                  FFAppState().userAnswer) ||
+                              (functions.questionSolver(
+                                      FFAppState().currentQuestion) ==
+                                  _model.userAnswerTextController.text)) {
+                            FFAppState().update(() {
+                              FFAppState().currentScore =
+                                  FFAppState().currentScore + 1;
+                            });
                           } else {
-                            setState(() => FFAppState().currentScore =
-                                FFAppState().currentScore + -1);
+                            FFAppState().update(() {
+                              FFAppState().currentScore =
+                                  FFAppState().currentScore + -1;
+                            });
                           }
 
-                          setState(() => FFAppState().currentQuestion =
-                              functions.generateRandomQuestion('Easy'));
-                          setState(() => FFAppState().userAnswer = '');
+                          FFAppState().update(() {
+                            FFAppState().currQuestion =
+                                FFAppState().currQuestion + 1;
+                          });
+                          FFAppState().update(() {
+                            FFAppState().currentQuestion =
+                                functions.getCurrentQuestion(
+                                    widget.dailyset!.toList(),
+                                    FFAppState().currQuestion);
+                            FFAppState().userAnswer = '';
+                          });
                           setState(() {
-                            userAnswerTextController?.clear();
+                            _model.userAnswerTextController?.clear();
                           });
                         },
                         autofocus: true,
                         obscureText: false,
                         decoration: InputDecoration(
                           hintText: FFAppState().userAnswer,
-                          hintStyle: FlutterFlowTheme.of(context).bodyText2,
+                          hintStyle: FlutterFlowTheme.of(context)
+                              .bodyText1
+                              .override(
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).primaryBtnText,
+                                fontSize: 50,
+                              ),
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Color(0x00000000),
@@ -262,13 +289,30 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                               topRight: Radius.circular(4.0),
                             ),
                           ),
+                          suffixIcon: _model
+                                  .userAnswerTextController!.text.isNotEmpty
+                              ? InkWell(
+                                  onTap: () async {
+                                    _model.userAnswerTextController?.clear();
+                                    setState(() {});
+                                  },
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Colors.white,
+                                    size: 22,
+                                  ),
+                                )
+                              : null,
                         ),
                         style: FlutterFlowTheme.of(context).bodyText1.override(
                               fontFamily: 'Poppins',
-                              color: Colors.white,
+                              color:
+                                  FlutterFlowTheme.of(context).primaryBtnText,
                               fontSize: 50,
                             ),
                         keyboardType: TextInputType.number,
+                        validator: _model.userAnswerTextControllerValidator
+                            .asValidator(context),
                       ),
                     ),
                   ],
@@ -292,8 +336,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                   children: [
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '1'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '1');
+                        });
                       },
                       text: '1',
                       options: FFButtonOptions(
@@ -310,8 +356,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '2'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '2');
+                        });
                       },
                       text: '2',
                       options: FFButtonOptions(
@@ -328,8 +376,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '3'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '3');
+                        });
                       },
                       text: '3',
                       options: FFButtonOptions(
@@ -346,8 +396,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '4'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '4');
+                        });
                       },
                       text: '4',
                       options: FFButtonOptions(
@@ -364,8 +416,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '5'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '5');
+                        });
                       },
                       text: '5',
                       options: FFButtonOptions(
@@ -382,8 +436,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '6'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '6');
+                        });
                       },
                       text: '6',
                       options: FFButtonOptions(
@@ -400,8 +456,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '7'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '7');
+                        });
                       },
                       text: '7',
                       options: FFButtonOptions(
@@ -418,8 +476,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '8'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '8');
+                        });
                       },
                       text: '8',
                       options: FFButtonOptions(
@@ -436,8 +496,10 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '9'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '9');
+                        });
                       },
                       text: '9',
                       options: FFButtonOptions(
@@ -465,15 +527,19 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                       ),
                       onPressed: () async {
                         setState(() {
-                          userAnswerTextController?.clear();
+                          _model.userAnswerTextController?.clear();
                         });
-                        setState(() => FFAppState().userAnswer = '');
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = '';
+                        });
                       },
                     ),
                     FFButtonWidget(
                       onPressed: () async {
-                        setState(() => FFAppState().userAnswer = functions
-                            .updateAnswer(FFAppState().userAnswer, '0'));
+                        FFAppState().update(() {
+                          FFAppState().userAnswer = functions.updateAnswer(
+                              FFAppState().userAnswer, '0');
+                        });
                       },
                       text: '0',
                       options: FFButtonOptions(
@@ -488,55 +554,50 @@ class _DailySetWidgetState extends State<DailySetWidget> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    InkWell(
-                      onDoubleTap: () async {
-                        setState(() => FFAppState().currentQuestion =
-                            functions.generateRandomQuestion('Easy'));
-                        if (functions
-                                .questionSolver(FFAppState().currentQuestion) ==
-                            FFAppState().userAnswer) {
-                          setState(() => FFAppState().currentScore =
-                              FFAppState().currentScore + 1);
+                    FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30,
+                      borderWidth: 1,
+                      buttonSize: 60,
+                      fillColor: Colors.white,
+                      icon: FaIcon(
+                        FontAwesomeIcons.angleDoubleRight,
+                        color: Color(0xFF03FF00),
+                        size: 30,
+                      ),
+                      onPressed: () async {
+                        if ((functions.questionSolver(
+                                    FFAppState().currentQuestion) ==
+                                FFAppState().userAnswer) ||
+                            (functions.questionSolver(
+                                    FFAppState().currentQuestion) ==
+                                _model.userAnswerTextController.text)) {
+                          FFAppState().update(() {
+                            FFAppState().currentScore =
+                                FFAppState().currentScore + 1;
+                          });
                         } else {
-                          setState(() => FFAppState().currentScore =
-                              FFAppState().currentScore + -1);
+                          FFAppState().update(() {
+                            FFAppState().currentScore =
+                                FFAppState().currentScore + -1;
+                          });
                         }
 
-                        setState(() => FFAppState().userAnswer = '');
+                        FFAppState().update(() {
+                          FFAppState().currQuestion =
+                              FFAppState().currQuestion + 1;
+                        });
+                        FFAppState().update(() {
+                          FFAppState().currentQuestion =
+                              functions.getCurrentQuestion(
+                                  widget.dailyset!.toList(),
+                                  FFAppState().currQuestion);
+                          FFAppState().userAnswer = '';
+                        });
                         setState(() {
-                          userAnswerTextController?.clear();
+                          _model.userAnswerTextController?.clear();
                         });
                       },
-                      child: FlutterFlowIconButton(
-                        borderColor: Colors.transparent,
-                        borderRadius: 30,
-                        borderWidth: 1,
-                        buttonSize: 60,
-                        fillColor: Colors.white,
-                        icon: FaIcon(
-                          FontAwesomeIcons.angleDoubleRight,
-                          color: Color(0xFF03FF00),
-                          size: 30,
-                        ),
-                        onPressed: () async {
-                          if ((functions.questionSolver(
-                                      FFAppState().currentQuestion) ==
-                                  FFAppState().userAnswer) ||
-                              (functions.questionSolver(
-                                      FFAppState().currentQuestion) ==
-                                  userAnswerTextController!.text)) {
-                            setState(() => FFAppState().currentScore =
-                                FFAppState().currentScore + 1);
-                          } else {
-                            setState(() => FFAppState().currentScore =
-                                FFAppState().currentScore + -1);
-                          }
-
-                          setState(() => FFAppState().currentQuestion =
-                              functions.generateRandomQuestion('Easy'));
-                          setState(() => FFAppState().userAnswer = '');
-                        },
-                      ),
                     ),
                   ],
                 ),

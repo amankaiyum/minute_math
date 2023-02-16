@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'auth_util.dart';
-
 class MinuteMathFirebaseUser {
   MinuteMathFirebaseUser(this.user);
   User? user;
@@ -20,7 +18,6 @@ Stream<MinuteMathFirebaseUser> minuteMathFirebaseUserStream() =>
         .map<MinuteMathFirebaseUser>(
       (user) {
         currentUser = MinuteMathFirebaseUser(user);
-        updateUserJwtTimer(user);
         return currentUser!;
       },
     );
